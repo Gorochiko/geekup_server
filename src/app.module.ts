@@ -3,6 +3,18 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './modules/users/entities/user.entity';
 import { Address } from './modules/address/entities/address.entities';
+import { Category } from './modules/categories/entities/category.entity';
+import { Inventory } from './modules/inventories/entities/inventory.entity';
+import { Order } from './modules/orders/entities/order.entity';
+import { OrderFee } from './modules/order-fees/entities/order-fee.entity';
+import { OrderItem } from './modules/order-items/entities/order-item.entity';
+import { Payment } from './modules/payments/entities/payment.entity';
+import { Product } from './modules/products/entities/product.entity';
+import { ProductVariant } from './modules/products-variants/entities/products-variant.entity';
+import { Store } from './modules/stores/entities/store.entity';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
+import { OrdersModule } from './modules/orders/orders.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -22,7 +34,23 @@ import { Address } from './modules/address/entities/address.entities';
         logging: console.log,
       }),
     }),
-    SequelizeModule.forFeature([User, Address]),
+    SequelizeModule.forFeature([
+      User,
+      Address,
+      Category,
+      Inventory,
+      Order,
+      OrderFee,
+      OrderItem,
+      Payment,
+      Product,
+      ProductVariant,
+      Store,
+    ]),
+       // Thêm các module chức năng
+    CategoriesModule,
+    ProductsModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}

@@ -10,8 +10,7 @@ import { OrderFee } from '../../order-fees/entities/order-fee.entity';
 @Table({ tableName: 'orders', timestamps: true })
 export class Order extends Model<Order> {
   @Column(DataType.DECIMAL(12,2)) total_amount: number;
-  @Column(DataType.STRING) status: string;
-
+  @Column(DataType.STRING) status: string; defaultValue: 'pending'; 
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
   user_id: number;
@@ -28,7 +27,7 @@ export class Order extends Model<Order> {
 
   @HasMany(() => OrderItem)
   orderItems: OrderItem[];
-
+ 
   @HasMany(() => Payment)
   payments: Payment[];
 
