@@ -17,6 +17,12 @@ import { ProductsModule } from './modules/products/products.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { ProductsVariantsModule } from './modules/products-variants/products-variants.module';
 import { AddressModule } from './modules/address/address.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { AuthModule } from './modules/auth/auth.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { OrderFeesModule } from './modules/order-fees/order-fees.module';
+import { OrderItemsModule } from './modules/order-items/order-items.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -49,12 +55,44 @@ import { AddressModule } from './modules/address/address.module';
       ProductVariant,
       Store,
     ]),
+    EventEmitterModule.forRoot(),
     CategoriesModule,
     ProductsModule,
     OrdersModule,
     ProductsVariantsModule,
     AddressModule,
     OrdersModule,
+    OrderFeesModule,
+    OrderItemsModule,
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
+          // ignoreTLS: true,
+          // secure: false,
+          auth: {
+            user: configService.get<string>('MAILDEV_USER'),
+            pass: configService.get<string>('MAILDEV_PASS'),
+          },
+        },
+        defaults: {
+          from: '"No Reply" <no-reply@localhost>',
+        },
+        // preview: true,
+        template: {
+          dir: process.cwd() + '/src/mail/templates/',
+          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    AuthModule,
   ],
 })
 export class AppModule {}

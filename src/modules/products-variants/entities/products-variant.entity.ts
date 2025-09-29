@@ -1,4 +1,3 @@
-/* eslint-disable */
 
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany, PrimaryKey, Default } from 'sequelize-typescript';
 import { Product } from '../../products/entities/product.entity';
@@ -16,10 +15,14 @@ export class ProductVariant extends Model<ProductVariant> {
   })
    declare id: string;
 
-  @Column(DataType.STRING) size: string;
-  @Column(DataType.STRING) color: string;
-  @Column(DataType.DECIMAL(12,2)) price: number;
-  @Column(DataType.STRING) image_url: string;
+  @Column(DataType.STRING) 
+  size!: number;
+  @Column(DataType.STRING) 
+  color!: string;
+  @Column(DataType.DECIMAL(12,2)) 
+  price!: number;
+  @Column(DataType.STRING) 
+  image_url!: string;
 
   @ForeignKey(() => Product)
   @Column(DataType.UUID)

@@ -6,7 +6,9 @@ import {
   HasMany,
   PrimaryKey,
   Default,
+  AllowNull,
 } from 'sequelize-typescript';
+import { defaultValueSchemable } from 'sequelize/types/utils';
 import { Address } from 'src/modules/address/entities/address.entities';
 import { Order } from 'src/modules/orders/entities/order.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -33,6 +35,14 @@ export class User extends Model<User> {
     allowNull: false,
   })
   email: string;
+
+  @Column({
+    type:DataType.STRING,
+      allowNull: false,
+      defaultValue:"user"
+  })
+  
+  role:string 
 
   @HasMany(() => Address)
   addresses: Address[];

@@ -14,5 +14,6 @@ import { ProductVariantRepository } from './repositories/product-variant.reposit
       useClass: ProductVariantRepository
     }
   ],
+  exports:[ProductsVariantsService]
 })
 export class ProductsVariantsModule {}

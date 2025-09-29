@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderFeeDto } from './dto/create-order-fee.dto';
-import { UpdateOrderFeeDto } from './dto/update-order-fee.dto';
+import { OrderFee } from './entities/order-fee.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import { CreationAttributes } from 'sequelize';
 
 @Injectable()
 export class OrderFeesService {
-  create(createOrderFeeDto: CreateOrderFeeDto) {
-    return 'This action adds a new orderFee';
+  constructor(
+    @InjectModel(OrderFee)
+    private readonly orderFeeModel: typeof OrderFee,
+  ) {}
+
+ async create(createOrderFeeDto: CreateOrderFeeDto) {
+    return await this.orderFeeModel.create(
+      createOrderFeeDto as CreationAttributes<OrderFee>,
+    );
   }
 
-  findAll() {
-    return `This action returns all orderFees`;
+  async findAll() {
+    return await this.orderFeeModel.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} orderFee`;
+  async findOne(id: string) {
+    return await this.orderFeeModel.findByPk(id);
   }
 
-  update(id: number, updateOrderFeeDto: UpdateOrderFeeDto) {
-    return `This action updates a #${id} orderFee`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} orderFee`;
+  async remove(id: string) {
+    const fee = await this.findOne(id);
+    if (fee) {
+      await fee.destroy();
+    }
+    return { deleted: true };
   }
 }

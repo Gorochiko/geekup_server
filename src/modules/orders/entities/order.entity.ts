@@ -16,7 +16,6 @@ import { Payment } from '../../payments/entities/payment.entity';
 import { OrderFee } from '../../order-fees/entities/order-fee.entity';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Table({ tableName: 'orders', timestamps: true })
 export class Order extends Model<Order> {
   @PrimaryKey
@@ -28,8 +27,13 @@ export class Order extends Model<Order> {
   declare id: string;
 
   @Column(DataType.DECIMAL(12, 2)) total_amount: number;
-  @Column(DataType.STRING) status: string;
-  defaultValue: 'pending';
+
+  @Column({
+    type: DataType.STRING,
+    defaultValue: 'pending',
+  })
+  status: string;
+
   @ForeignKey(() => User)
   @Column(DataType.UUID)
   user_id: string;

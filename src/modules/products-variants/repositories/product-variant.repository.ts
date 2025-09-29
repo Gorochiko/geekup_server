@@ -6,7 +6,8 @@ import { CreateProductVariantDto } from '../dto/create-products-variant.dto';
 
 export interface RepositoryVariant{
     create(data: CreateProductVariantDto):Promise<ProductVariant>,
-    findAll(): Promise<ProductVariant[]>
+    findAll(): Promise<ProductVariant[]>,
+    findByid(id:string)
 }
 
 @Injectable()
@@ -24,5 +25,7 @@ export class ProductVariantRepository implements RepositoryVariant {
     return this.variantModel.findAll({ include: { all: true } });
   }
 
-
+  async findByid(id: string) {
+    return this.variantModel.findByPk(id);
+  }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable */
 
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, PrimaryKey, Default } from 'sequelize-typescript';
 import { Order } from '../../orders/entities/order.entity';

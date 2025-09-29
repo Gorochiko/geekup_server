@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateProductVariantDto } from './dto/create-products-variant.dto';
 import { UpdateProductsVariantDto } from './dto/update-products-variant.dto';
-import { ProductVariantRepository } from './repositories/product-variant.repository';
+import { ProductVariantRepository, RepositoryVariant } from './repositories/product-variant.repository';
 import { throwIfEmpty } from 'rxjs';
 
 export const PRODUCT_VARIANT_CODE= "PRODUCT_VARIANT_CODE_REPOSITORY"
@@ -11,7 +11,7 @@ export class ProductsVariantsService {
 
     constructor(
       @Inject(PRODUCT_VARIANT_CODE)
-      private readonly variantRepo: ProductVariantRepository
+      private readonly variantRepo: RepositoryVariant
     ) {}
     async create(dto: CreateProductVariantDto) {
     return this.variantRepo.create(dto);
@@ -25,5 +25,9 @@ export class ProductsVariantsService {
     return response
   }
  
+  async findByid(id:string){
+    const response = await this.variantRepo.findByid(id);
+    return response
+  }
 
 }

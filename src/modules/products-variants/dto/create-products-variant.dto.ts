@@ -2,7 +2,7 @@ import { IsUUID, IsString, IsNumber, IsOptional, IsUrl } from 'class-validator';
 
 export class CreateProductVariantDto {
   @IsString()
-  size: string;
+  size: number;
 
   @IsString()
   color: string;
