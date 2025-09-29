@@ -6,6 +6,7 @@ import { OrderFee } from '../../order-fees/entities/order-fee.entity';
 import { Payment } from '../../payments/entities/payment.entity';
 import { OrderRepo } from '../order.interface';
 import { CreateOrderFeeDto } from 'src/modules/order-fees/dto/create-order-fee.dto';
+import { User } from 'src/modules/users/entities/user.entity';
 
 
 
@@ -40,7 +41,7 @@ export class OrderRepository implements OrderRepo{
   }
 
   async findById(id: string) {
-    return this.orderModel.findByPk(id, { include: [OrderItem, OrderFee, Payment] });
+    return this.orderModel.findByPk(id, { include: [OrderItem, OrderFee, Payment,User] });
   }
 
   async findAllOrders(){

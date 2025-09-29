@@ -2,9 +2,10 @@ import { forwardRef, Module } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
 import { OrdersModule } from '../orders/orders.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [forwardRef(() => OrdersModule)], // dùng forwardRef nếu cần
+  imports: [forwardRef(() => OrdersModule),UsersModule], // dùng forwardRef nếu cần
   controllers: [PaymentsController],
   providers: [PaymentsService],
   exports: [PaymentsService],  
