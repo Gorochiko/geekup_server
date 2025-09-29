@@ -70,38 +70,50 @@ export class PaymentsService {
     }
   }
 
-  async handleMoMoIpn(body: any) {
-    const orderId = body.orderId;
-    if (body.resultCode === 0) {
-      const order = await this.orderRepo.findById(orderId);
-      console.log(order);
-      console.log(order.user);
-      console.log(order.user_id);
-      if (!order || !order.user) {
-        console.error('Order or user not found!');
-        return { message: 'Order or user missing' };
-      }
-      console.log(order, 123);
+ async handleMoMoIpn(body: any) {
+  const orderId = body.orderId;
+
+  const order = await this.orderRepo.findById(orderId);
+
+  if (!order) {
+    console.error('Order not found for ID:', orderId);
+    return { message: 'Order not found' };
+  }
+  const plainOrder = order.get({ plain: true });
+  if (!plainOrder.user) {
+    console.error('User not found for order:', orderId);
+    return { message: 'User not found' };
+  }
+
+  if (body.resultCode === 0) {
+    try {
       await this.mailerService.sendMail({
-        to: order.user.email,
+        to: plainOrder.user.email,
         subject: 'Xác nhận đặt hàng',
         template: 'order',
         context: {
-          userName: order.user.name,
-          orderId: order.id,
-          orderStatus: order.status,
-          totalAmount: order.total_amount,
-          createdAt: order.createdAt,
-          items: order.items || [],
+          userName: plainOrder.user.name,
+          orderId: plainOrder.id,
+          orderStatus: plainOrder.status,
+          totalAmount: plainOrder.total_amount,
+          createdAt: plainOrder.createdAt,
+          items: plainOrder.orderItems || [],
+          fees: plainOrder.fees || [],
+          payments: plainOrder.payments || [],
         },
       });
-      await this.orderRepo.updateStatus(orderId, 'paid');
-    } else if (body.resultCode) {
-      await this.orderRepo.updateStatus(orderId, 'processing');
-    } else {
-      await this.orderRepo.updateStatus(orderId, 'failed');
-    }
 
-    return { message: 'IPN received' };
+      await this.orderRepo.updateStatus(orderId, 'paid');
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  } else if (body.resultCode) {
+    await this.orderRepo.updateStatus(orderId, 'processing');
+  } else {
+    await this.orderRepo.updateStatus(orderId, 'failed');
   }
+
+  return { message: 'IPN received' };
+}
+
 }
