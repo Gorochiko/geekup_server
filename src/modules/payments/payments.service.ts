@@ -2,7 +2,6 @@ import { Injectable, HttpException, Inject } from '@nestjs/common';
 import * as crypto from 'crypto';
 import axios from 'axios';
 import { ORDER_CODE, OrderRepo } from '../orders/order.interface';
-import { UsersService } from '../users/users.service';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -10,7 +9,6 @@ export class PaymentsService {
   constructor(
     @Inject(ORDER_CODE)
     private readonly orderRepo: OrderRepo,
-    private readonly userRepo: UsersService,
     private readonly mailerService: MailerService,
   ) {}
   private readonly partnerCode = 'MOMO';
@@ -76,18 +74,22 @@ export class PaymentsService {
     const orderId = body.orderId;
     if (body.resultCode === 0) {
       const order = await this.orderRepo.findById(orderId);
+      if (!order || !order.user) {
+        console.error('Order or user not found!');
+        return { message: 'Order or user missing' };
+      }
       console.log(order, 123);
       await this.mailerService.sendMail({
         to: order.user.email,
         subject: 'Xác nhận đặt hàng',
         template: 'order',
         context: {
-          userName: order.user.name, 
-          orderId: order.id, 
-          orderStatus: order.status, 
-          totalAmount: order.total_amount, 
-          createdAt: order.createdAt, 
-          items: order.items || [], 
+          userName: order.user.name,
+          orderId: order.id,
+          orderStatus: order.status,
+          totalAmount: order.total_amount,
+          createdAt: order.createdAt,
+          items: order.items || [],
         },
       });
       await this.orderRepo.updateStatus(orderId, 'paid');

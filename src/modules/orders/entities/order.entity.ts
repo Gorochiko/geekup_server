@@ -42,18 +42,18 @@ export class Order extends Model<Order> {
   @Column(DataType.UUID)
   address_id: string;
 
-  @BelongsTo(() => User)
+  @BelongsTo(() => User, 'user_id')
   user: User;
 
   @BelongsTo(() => Address)
   address: Address;
 
-  @HasMany(() => OrderItem)
+  @HasMany(() => OrderItem, 'order_id')
   orderItems: OrderItem[];
 
-  @HasMany(() => Payment)
+  @HasMany(() => Payment, 'order_id')
   payments: Payment[];
 
-  @HasMany(() => OrderFee)
+  @HasMany(() => OrderFee, 'order_id')
   fees: OrderFee[];
 }

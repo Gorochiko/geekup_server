@@ -41,7 +41,12 @@ export class OrderRepository implements OrderRepo{
   }
 
   async findById(id: string) {
-    return this.orderModel.findByPk(id, { include: [OrderItem, OrderFee, Payment,User] });
+    return this.orderModel.findByPk(id, { include: [
+      { model: User, as: 'user' },
+      { model: OrderItem, as: 'orderItems' },
+      { model: OrderFee, as: 'fees' },
+      { model: Payment, as: 'payments' },
+    ],});
   }
 
   async findAllOrders(){
