@@ -1,120 +1,109 @@
-<!-- order.hbs -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xác nhận đơn hàng</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-    h1 {
-      color: #333333;
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    p {
-      color: #555555;
-      font-size: 16px;
-      margin: 5px 0;
-    }
-    .order-info {
-      margin-top: 20px;
-      border-top: 1px solid #ddd;
-      padding-top: 10px;
-    }
-    .order-info p {
-      margin: 3px 0;
-    }
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    .items-table th, .items-table td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    .items-table th {
-      background-color: #f0f0f0;
-    }
-    .total {
-      text-align: right;
-      font-weight: bold;
-      margin-top: 10px;
-      font-size: 18px;
-    }
-    .footer {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #888888;
-      text-align: center;
-    }
-    @media (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-      h1 {
-        font-size: 20px;
-      }
-      .items-table th, .items-table td {
-        font-size: 14px;
-        padding: 6px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xác nhận đơn hàng</title>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; margin:0; padding:0; }
+  .container { max-width:600px; margin:20px auto; background-color:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:20px; }
+  h1 { color:#333; font-size:24px; margin-bottom:10px; }
+  p { color:#555; font-size:16px; margin:5px 0; }
+  .order-info { margin-top:20px; border-top:1px solid #ddd; padding-top:10px; }
+  .order-info p { margin:3px 0; }
+  table { width:100%; border-collapse:collapse; margin-top:15px; }
+  th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+  th { background-color:#f0f0f0; }
+  .total { text-align:right; font-weight:bold; margin-top:10px; font-size:18px; }
+  .footer { margin-top:30px; font-size:14px; color:#888; text-align:center; }
+  @media (max-width:600px) {
+    .container { padding:15px; }
+    h1 { font-size:20px; }
+    th, td { font-size:14px; padding:6px; }
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Xin chào {{userName}},</h1>
-    <p>Đơn hàng của bạn đã được xác nhận!</p>
+<div class="container">
+  <h1>Xin chào {{userName}},</h1>
+  <p>Đơn hàng của bạn đã được xác nhận!</p>
 
-    <div class="order-info">
-      <p><strong>Mã đơn hàng:</strong> {{orderId}}</p>
-      <p><strong>Trạng thái:</strong> {{orderStatus}}</p>
-      <p><strong>Ngày tạo:</strong> {{createdAt}}</p>
-    </div>
-
-    {{#if items.length}}
-    <table class="items-table">
-      <thead>
-        <tr>
-          <th>Sản phẩm</th>
-          <th>Số lượng</th>
-          <th>Giá</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each items}}
-        <tr>
-        <td>{{products_variants_id}}</td>
-        <td>{{quantity}}</td>
-        <td>{{unit_price}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
-
-    <p class="total">Tổng tiền: {{totalAmount}}</p>
-
-    <div class="footer">
-      <p>Cảm ơn bạn đã mua hàng!</p>
-      <p>GeekUp Shop</p>
-    </div>
+  <div class="order-info">
+    <p><strong>Mã đơn hàng:</strong> {{orderId}}</p>
+    <p><strong>Trạng thái:</strong> {{orderStatus}}</p>
+    <p><strong>Ngày tạo:</strong> {{createdAt}}</p>
   </div>
+
+  {{#if items.length}}
+  <h2>Sản phẩm</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tên sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Giá</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{quantity}}</td>
+        <td>{{price}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{/if}}
+
+  {{#if fees.length}}
+  <h2>Phí</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tên phí</th>
+        <th>Số tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each fees}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{amount}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{/if}}
+
+  {{#if payments.length}}
+  <h2>Thanh toán</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Phương thức</th>
+        <th>Số tiền</th>
+        <th>Trạng thái</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each payments}}
+      <tr>
+        <td>{{method}}</td>
+        <td>{{amount}}</td>
+        <td>{{status}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{/if}}
+
+  <p class="total">Tổng cộng: {{totalAmount}}</p>
+
+  <div class="footer">
+    <p>Cảm ơn bạn đã mua hàng!</p>
+    <p>GeekUp Shop</p>
+  </div>
+</div>
 </body>
 </html>
