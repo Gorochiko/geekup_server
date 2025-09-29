@@ -74,6 +74,8 @@ export class PaymentsService {
     const orderId = body.orderId;
     if (body.resultCode === 0) {
       const order = await this.orderRepo.findById(orderId);
+      console.log(order.user); // Nếu undefined -> lỗi alias hoặc dữ liệu
+      console.log(order.user_id); // Xem có đúng không
       if (!order || !order.user) {
         console.error('Order or user not found!');
         return { message: 'Order or user missing' };
