@@ -84,7 +84,11 @@ export class PaymentsService {
     console.error('User not found for order:', orderId);
     return { message: 'User not found' };
   }
-
+  const items = plainOrder.orderItems.map(item => ({
+  name: item.product?.name || 'Sản phẩm',
+  quantity: item.quantity,
+  price: item.unit_price,
+}));
   if (body.resultCode === 0) {
     try {
       await this.mailerService.sendMail({
@@ -97,7 +101,7 @@ export class PaymentsService {
           orderStatus: plainOrder.status,
           totalAmount: plainOrder.total_amount,
           createdAt: plainOrder.createdAt,
-          items: plainOrder.orderItems || [],
+          items: items,
           fees: plainOrder.fees || [],
           payments: plainOrder.payments || [],
         },
