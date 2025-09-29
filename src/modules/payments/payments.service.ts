@@ -15,7 +15,7 @@ export class PaymentsService {
   private readonly redirectUrl =
     'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
   private readonly ipnUrl =
-    'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
+    'https://geekup-server-3.onrender.com/payments/momo/ipn';
   private readonly endpoint =
     'https://test-payment.momo.vn/v2/gateway/api/create';
 
