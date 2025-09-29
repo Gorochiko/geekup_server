@@ -72,7 +72,11 @@ export class PaymentsService {
         const orderId = body.orderId;
     if (body.resultCode === 0) {
       await this.orderRepo.updateStatus(orderId, 'paid');
-    } else {
+    }
+    else if(body.resultCode) {
+       await this.orderRepo.updateStatus(orderId, 'processing');
+    }
+    else {
       await this.orderRepo.updateStatus(orderId, 'failed');
     }
 
