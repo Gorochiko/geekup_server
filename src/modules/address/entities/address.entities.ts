@@ -5,11 +5,21 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  PrimaryKey,
+  Default,
 } from 'sequelize-typescript';
 import { User } from 'src/modules/users/entities/user.entity';
-
+import { v4 as uuidv4 } from 'uuid';
 @Table({ tableName: 'address', timestamps: true })
 export class Address extends Model<Address> {
+  @PrimaryKey
+  @Default(uuidv4) 
+  @Column({
+    type: DataType.UUID,
+    allowNull: false,
+  })
+   declare id: string;
+
   @Column({
     type: DataType.STRING,
     unique: true,
@@ -44,10 +54,10 @@ export class Address extends Model<Address> {
 
   @ForeignKey(() => User)
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.UUID,
     allowNull: false,
   })
-  user_id: number;
+  user_id: string;
 
   @BelongsTo(() => User)
   user: User;

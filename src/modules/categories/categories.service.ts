@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoriesFunctions } from './repositories/categories.repository';
@@ -12,7 +12,10 @@ export class CategoriesService {
     private readonly categoriesRepository: CategoriesFunctions) {}
 
   create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+    if (!createCategoryDto.name) {
+      throw new BadRequestException('Category name is required');
+    }
+    return this.categoriesRepository.create(createCategoryDto);
   }
 
   async findAll() {
@@ -22,6 +25,7 @@ export class CategoriesService {
       data: categories,
     };
   }
+
 
   findOne(id: number) {
     return `This action returns a #${id} category`;

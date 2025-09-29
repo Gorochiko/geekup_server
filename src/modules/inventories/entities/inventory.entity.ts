@@ -7,12 +7,12 @@ import { Store } from '../../stores/entities/store.entity';
 @Table({ tableName: 'inventories', timestamps: false })
 export class Inventory extends Model<Inventory> {
   @ForeignKey(() => ProductVariant)
-  @Column({ type: DataType.INTEGER, primaryKey: true })
-  products_variants_id: number;
+  @Column({ type: DataType.UUID, primaryKey: true })
+  products_variants_id: string;
 
   @ForeignKey(() => Store)
-  @Column({ type: DataType.INTEGER, primaryKey: true })
-  stores_id: number;
+  @Column({ type: DataType.UUID, primaryKey: true })
+  stores_id: string;
 
   @Column(DataType.INTEGER)
   quantity: number;

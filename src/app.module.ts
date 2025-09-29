@@ -15,6 +15,8 @@ import { Store } from './modules/stores/entities/store.entity';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { ProductsVariantsModule } from './modules/products-variants/products-variants.module';
+import { AddressModule } from './modules/address/address.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -47,9 +49,11 @@ import { OrdersModule } from './modules/orders/orders.module';
       ProductVariant,
       Store,
     ]),
-       // Thêm các module chức năng
     CategoriesModule,
     ProductsModule,
+    OrdersModule,
+    ProductsVariantsModule,
+    AddressModule,
     OrdersModule,
   ],
 })

@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductsVariantDto } from './dto/create-products-variant.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { CreateProductVariantDto } from './dto/create-products-variant.dto';
 import { UpdateProductsVariantDto } from './dto/update-products-variant.dto';
+import { ProductVariantRepository } from './repositories/product-variant.repository';
+import { throwIfEmpty } from 'rxjs';
+
+export const PRODUCT_VARIANT_CODE= "PRODUCT_VARIANT_CODE_REPOSITORY"
 
 @Injectable()
 export class ProductsVariantsService {
-  create(createProductsVariantDto: CreateProductsVariantDto) {
-    return 'This action adds a new productsVariant';
+
+    constructor(
+      @Inject(PRODUCT_VARIANT_CODE)
+      private readonly variantRepo: ProductVariantRepository
+    ) {}
+    async create(dto: CreateProductVariantDto) {
+    return this.variantRepo.create(dto);
   }
 
-  findAll() {
-    return `This action returns all productsVariants`;
+ async findAll() {
+    const response = await this.variantRepo.findAll();
+    if(!response){
+      throwIfEmpty()
+    }
+    return response
   }
+ 
 
-  findOne(id: number) {
-    return `This action returns a #${id} productsVariant`;
-  }
-
-  update(id: number, updateProductsVariantDto: UpdateProductsVariantDto) {
-    return `This action updates a #${id} productsVariant`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} productsVariant`;
-  }
 }

@@ -6,6 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -18,6 +21,18 @@ export class ProductsController {
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
+  }
+
+  @Get('search')
+  async search(@Query() filters: any) {
+    return this.productsService.searchProducts(filters);
+  }
+
+  @Get('category/:categoryId')
+  async getProductsByCategory(
+    @Param('categoryId', ParseUUIDPipe) categoryId: string,
+  ) {
+    return this.productsService.getProductsByCategory(categoryId);
   }
 
   @Get()

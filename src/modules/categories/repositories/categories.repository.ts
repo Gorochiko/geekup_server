@@ -3,10 +3,11 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Category } from '../entities/category.entity';
 import { Product } from '../../products/entities/product.entity';
 import { ProductVariant } from '../../products-variants/entities/products-variant.entity';
-
+import { CreateCategoryDto } from '../dto/create-category.dto';
 export interface CategoriesFunctions {
   findAll(): Promise<Category[]>;
-  findProductsByCategory(categoryId: number): Promise<Product[]>;
+ 
+  create(CreateCategoryDto: CreateCategoryDto): Promise<Category>;
 }
 
 export class CategoriesRepository implements CategoriesFunctions {
@@ -21,13 +22,12 @@ export class CategoriesRepository implements CategoriesFunctions {
     });
   }
 
-  async findProductsByCategory(categoryId: number): Promise<Product[]> {
-    const category = await this.categoryModel.findByPk(categoryId, {
-      include: [{
-        model: Product,
-        include: [ProductVariant],
-      }],
-    });
-    return category?.products || [];
+     async create(categoryData: CreateCategoryDto): Promise<Category> {
+    const category = await this.categoryModel.create({
+      name: categoryData.name,
+    }as Category);
+    return category;
   }
+
+
 }

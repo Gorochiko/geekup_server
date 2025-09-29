@@ -12,6 +12,7 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
+
   @Get()
   findAll() {
     return this.categoriesService.findAll();
