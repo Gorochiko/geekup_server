@@ -40,14 +40,47 @@ export class OrderRepository implements OrderRepo{
     return this.paymentModel.update({ status }, { where: { order_id: orderId } });
   }
 
-  async findById(id: string) {
-    return this.orderModel.findByPk(id, { include: [
-      { model: User, as: 'user' },
-      { model: OrderItem, as: 'orderItems' },
-      { model: OrderFee, as: 'fees' },
-      { model: Payment, as: 'payments' },
-    ],});
-  }
+ async findById(id: string) {
+  const order = await this.orderModel.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: ['id', 'name', 'email'] },
+      { 
+        model: OrderItem, 
+        as: 'orderItems', 
+        attributes: ['id', 'products_variants_id', 'quantity', 'unit_price'] 
+      },
+      { model: OrderFee, as: 'fees', attributes: ['name', 'amount', 'type'] },
+      { model: Payment, as: 'payments', attributes: ['method', 'amount', 'status'] },
+    ],
+  });
+
+  if (!order) return null;
+
+  const plainOrder = {
+    id: order.id,
+    status: order.status,
+    total_amount: order.total_amount,
+    createdAt: order.createdAt,
+    user: order.user ? { name: order.user.name, email: order.user.email } : null,
+    orderItems: order.orderItems.map((i) => ({
+      name: `Variant ${i.products_variants_id}`,
+      quantity: i.quantity,
+      price: i.unit_price,
+    })),
+    fees: order.fees.map((f) => ({
+      name: f.name,
+      amount: f.amount,
+      type: f.type,
+    })),
+    payments: order.payments.map((p) => ({
+      method: p.method,
+      amount: p.amount,
+      status: p.status,
+    })),
+  };
+
+  return plainOrder;
+}
 
   async findAllOrders(){
     const res = await this.orderModel.findAll()

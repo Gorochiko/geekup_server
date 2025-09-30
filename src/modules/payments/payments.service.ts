@@ -70,25 +70,15 @@ export class PaymentsService {
     }
   }
 
- async handleMoMoIpn(body: any) {
+async handleMoMoIpn(body: any) {
   const orderId = body.orderId;
+  const plainOrder = await this.orderRepo.findById(orderId);
 
-  const order = await this.orderRepo.findById(orderId);
+  if (!plainOrder || !plainOrder.user) {
+    console.error('Order or user not found!');
+    return { message: 'Order or user not found!' };
+  }
 
-  if (!order) {
-    console.error('Order not found for ID:', orderId);
-    return { message: 'Order not found' };
-  }
-  const plainOrder = order.get({ plain: true });
-  if (!plainOrder.user) {
-    console.error('User not found for order:', orderId);
-    return { message: 'User not found' };
-  }
-  const items = plainOrder.orderItems.map(item => ({
-  name: item.product?.name || 'Sản phẩm',
-  quantity: item.quantity,
-  price: item.unit_price,
-}));
   if (body.resultCode === 0) {
     try {
       await this.mailerService.sendMail({
@@ -101,23 +91,21 @@ export class PaymentsService {
           orderStatus: plainOrder.status,
           totalAmount: plainOrder.total_amount,
           createdAt: plainOrder.createdAt,
-          items: items,
+          items: plainOrder.orderItems || [],
           fees: plainOrder.fees || [],
           payments: plainOrder.payments || [],
         },
       });
 
       await this.orderRepo.updateStatus(orderId, 'paid');
-    } catch (error) {
-      console.error('Error sending email:', error);
+    } catch (err) {
+      console.error('Error sending email:', err);
     }
-  } else if (body.resultCode) {
-    await this.orderRepo.updateStatus(orderId, 'processing');
   } else {
-    await this.orderRepo.updateStatus(orderId, 'failed');
+    await this.orderRepo.updateStatus(orderId, body.resultCode ? 'processing' : 'failed');
   }
 
-  return { message: 'IPN received' };
+  return { message: 'IPN processed' };
 }
 
 }
