@@ -29,6 +29,12 @@ export class User extends Model<User> {
   })
   name: string;
 
+     @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  passowrd: string;
+
   @Column({
     type: DataType.STRING,
     unique: true,

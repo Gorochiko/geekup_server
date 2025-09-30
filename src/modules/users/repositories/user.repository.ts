@@ -16,8 +16,9 @@ export class UserRepository implements IUserRepository {
   async create(createUserDto: CreateUserDto): Promise<User> {
     return await this.userModel.create({
       ...createUserDto,
+      passowrd: createUserDto.password,
       role: createUserDto.role || 'user',
-    }as User);
+    } as unknown as User);
   }
 
   async findAll(): Promise<User[]> {
